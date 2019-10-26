@@ -151,6 +151,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
     def _SendPacketQueue(self):
         for packet in self.sending_queue:
             sendp(packet[0], iface=packet[1])
+            packet[0].show2()
 
     def _RemovePacketFromQueue(self):
         current_row = self.queueListWidget.currentRow()
@@ -401,7 +402,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         if self.checksumHeaderCheckbox.isChecked() is True:
             self.checksumLineEdit.setEnabled(False)
             tmp_pkt_eth = Ether()
-            tmp_pkt_ip = IP()
+            tmp_pkt_ip = IP(src=self._current_src_ip, dst=self._current_dst_ip)
             if self.current_type == 'TCP':
                 tmp_pkt_transp = TCP(sport=self._current_src_port, dport=self._current_dst_port, seq=self._current_seq, ack=self._current_ack,
                                      dataofs=self._current_data_offset_or_len, reserved=self._current_reserved, flags=self._current_flags, window=self._current_window, urgptr=self._current_urgptr)  # This depends on chosen packet type
@@ -472,17 +473,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self._SetHeaderChecksum()
         self._SetTcpLen()
 
-    def _ChecksumLineEdited(self):
-        try:
-            self._current_chksum = int(self.checksumLineEdit.text(), 0)
-        except:
-            self.ShowError()
+            def _ChecksumLineEdited(self):
+            try:
+                self._current_chksum = int(self.checksumLineEdit.text(), 0)
+            except:
+                self.ShowError()
 
-    def _LenLineEdited(self):
-        try:
-            self._current_data_offset_or_len = int(self.lenLineEdit.text())
-            self._SetHeaderChecksum()
-        except:
+        def _LenLineEdited(self):
+            try:
+                self._current_data_offset_or_len = int(self.lenLineEdit.text())
+                self._SetHeaderChecksum()
+            except:
             self.ShowError()
 
     def _AckLineEdited(self):
