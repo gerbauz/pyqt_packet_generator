@@ -473,17 +473,17 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
         self._SetHeaderChecksum()
         self._SetTcpLen()
 
-            def _ChecksumLineEdited(self):
-            try:
-                self._current_chksum = int(self.checksumLineEdit.text(), 0)
-            except:
-                self.ShowError()
+    def _ChecksumLineEdited(self):
+        try:
+            self._current_chksum = int(self.checksumLineEdit.text(), 0)
+        except:
+            self.ShowError()
 
-        def _LenLineEdited(self):
-            try:
-                self._current_data_offset_or_len = int(self.lenLineEdit.text())
-                self._SetHeaderChecksum()
-            except:
+    def _LenLineEdited(self):
+        try:
+            self._current_data_offset_or_len = int(self.lenLineEdit.text())
+            self._SetHeaderChecksum()
+        except:
             self.ShowError()
 
     def _AckLineEdited(self):
@@ -626,8 +626,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_mainWindow):
             self.srcIpLineEdit.setEnabled(False)
             if self.adaptersBox.currentIndex() == 0:
                 return
-            current_ip = dev_from_pcapname(
-                self.current_if_list[self.adaptersBox.currentIndex() - 1]).ip
+            current_ip = dev_from_pcapname(self.current_if_list[self.adaptersBox.currentIndex() - 1]).ip
             self.srcIpLineEdit.setText(current_ip)
             self._current_src_ip = current_ip
             self._SetCheckSum()
